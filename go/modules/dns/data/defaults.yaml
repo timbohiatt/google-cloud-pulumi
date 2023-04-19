@@ -1,0 +1,36 @@
+DNS: 
+  projectId:
+  description: 
+  clientNetworks: 
+  dnsSecConfig: 
+    nonExistence:
+	  state: "off"
+	  keySigningKey:
+      algorithm:
+      keyLength:
+	  zoneSigningKey:
+      algorithm:
+      keyLength:
+  domain: 
+  enableLogging: false
+  forwarders:
+  name: 
+  peerNetwork: 
+  serviceDirectoryNamespace: 
+  type: "private"
+  zoneCreate: true
+  recordSets: 
+    ttl: 
+    records:
+      - 
+    geoRouting: 
+      - location: 
+        records: 
+          - 
+    wrrRouting: 
+      - weight: 
+        records: 
+          - 
+
+    
+  
