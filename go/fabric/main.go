@@ -15,7 +15,7 @@
 package main
 
 import (
-	project "https://github.com/timbohiatt/google-cloud-pulumi/go/modules/project"
+	project "github.com/timbohiatt/google-cloud-pulumi/go/modules/project"
 
 	"github.com/pulumi/pulumi-gcp/sdk/v6/go/gcp"
 	"github.com/pulumi/pulumi-gcp/sdk/v6/go/gcp/serviceaccount"
