@@ -21,9 +21,8 @@ import (
 	compute "github.com/pulumi/pulumi-gcp/sdk/v6/go/gcp/compute"
 	monitoring "github.com/pulumi/pulumi-gcp/sdk/v6/go/gcp/monitoring"
 	service "github.com/pulumi/pulumi-gcp/sdk/v6/go/gcp/projects"
-	lien "github.com/pulumi/pulumi-google-native/sdk/go/google/cloudresourcemanager/v3/Lien"
-	project "github.com/pulumi/pulumi-google-native/sdk/go/google/cloudresourcemanager/v3/Project"
-	contacts "github.com/pulumi/pulumi-google-native/sdk/go/google/essentialcontaxt/v1"
+	cloudresourcemanager "github.com/pulumi/pulumi-google-native/sdk/go/google/cloudresourcemanager/v3"
+	contacts "github.com/pulumi/pulumi-google-native/sdk/go/google/essentialcontacts/v1"
 	"github.com/pulumi/pulumi/sdk/v3/go/pulumi"
 )
 
@@ -177,12 +176,12 @@ func NewProject(ctx *pulumi.Context, name string, args ProjectArgs, opts pulumi.
 
 	// [Pulumi Native] - Google Cloud Project
 	if args.ProjectCreate {
-		newProject, err := project.NewProject(ctx, name, &project.ProjectArgs{
+		newProject, err := cloudresourcemanager.NewProject(ctx, name, &cloudresourcemanager.ProjectArgs{
 			Parent:      pulumi.String(fmt.Sprintf("%s/%s", ParentType, ParentId)), // Organization or Folder to Create Project
 			ProjectId:   pulumi.String(fmt.Sprintf("%s%s", Prefix, args.Name)),     // Google Project ID
 			DisplayName: pulumi.String(DescriptiveName),                            // Google Project Descriptive Name
 			//Labels // TODO
-			
+
 		})
 		if err != nil {
 			// Error Creating New Google Cloud Project
