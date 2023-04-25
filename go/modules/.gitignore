@@ -1,0 +1,4 @@
+**/.pulumi/
+Pulumi.*.yaml
+Gopkg.lock
+**/.DS_Store

@@ -1,11 +1,11 @@
-module fabric
+module go/modules/project
 
 go 1.19
 
 require (
 	github.com/pulumi/pulumi-gcp/sdk/v6 v6.54.0
+	github.com/pulumi/pulumi-google-native/sdk v0.30.0
 	github.com/pulumi/pulumi/sdk/v3 v3.64.0
-	github.com/timbohiatt/google-cloud-pulumi v0.0.0-20230419140455-1d5fa3abedc4
 )
 
 require (
@@ -39,7 +39,6 @@ require (
 	github.com/pjbgf/sha1cd v0.3.0 // indirect
 	github.com/pkg/errors v0.9.1 // indirect
 	github.com/pkg/term v1.1.0 // indirect
-	github.com/pulumi/pulumi-google-native/sdk v0.30.0 // indirect
 	github.com/rivo/uniseg v0.2.0 // indirect
 	github.com/rogpeppe/go-internal v1.9.0 // indirect
 	github.com/sabhiram/go-gitignore v0.0.0-20210923224102-525f6e181f06 // indirect
