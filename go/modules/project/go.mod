@@ -1,11 +1,10 @@
-module go/modules/project
+module google-cloud-module-project
 
-go 1.19
+go 1.18
 
 require (
-	github.com/pulumi/pulumi-gcp/sdk/v6 v6.54.0
-	github.com/pulumi/pulumi-google-native/sdk v0.30.0
-	github.com/pulumi/pulumi/sdk/v3 v3.64.0
+	github.com/pulumi/pulumi-gcp/sdk/v6 v6.52.0
+	github.com/pulumi/pulumi/sdk/v3 v3.60.1
 )
 
 require (
@@ -45,7 +44,6 @@ require (
 	github.com/santhosh-tekuri/jsonschema/v5 v5.0.0 // indirect
 	github.com/sergi/go-diff v1.2.0 // indirect
 	github.com/skeema/knownhosts v1.1.0 // indirect
-	github.com/spf13/cast v1.4.1 // indirect
 	github.com/spf13/cobra v1.6.1 // indirect
 	github.com/spf13/pflag v1.0.5 // indirect
 	github.com/texttheater/golang-levenshtein v1.0.1 // indirect
