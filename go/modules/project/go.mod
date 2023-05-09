@@ -2,10 +2,7 @@ module github.com/timbohiatt/google-cloud-pulumi/go/modules/project
 
 go 1.20
 
-require (
-	github.com/pulumi/pulumi-gcp/sdk/v6 v6.52.0
-	github.com/pulumi/pulumi/sdk/v3 v3.60.1
-)
+require github.com/pulumi/pulumi/sdk/v3 v3.60.1
 
 require (
 	github.com/Microsoft/go-winio v0.5.2 // indirect
@@ -31,6 +28,7 @@ require (
 	github.com/inconshreveable/mousetrap v1.0.1 // indirect
 	github.com/jbenet/go-context v0.0.0-20150711004518-d14ea06fba99 // indirect
 	github.com/kevinburke/ssh_config v1.2.0 // indirect
+	github.com/mattn/go-isatty v0.0.16 // indirect
 	github.com/mattn/go-runewidth v0.0.13 // indirect
 	github.com/mitchellh/go-ps v1.0.0 // indirect
 	github.com/opentracing/basictracer-go v1.1.0 // indirect

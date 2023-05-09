@@ -12,14 +12,14 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-name: google-cloud-factory-project
-description: Google Foundations - Factory - Project
+name: google-cloud-blueprint-factory-project
+description: Google Foundations - Blueprint - ProjectFactory
 runtime: go
 pulumi:disable-default-providers:
     - gcp
     - google-native
 template:
-  description: "A Google Cloud Go Pulumi Factory for creating a New Google Cloud Project with Supporting Configuration for project IAM, Service Accounts, DNS & Biiling Aleting."
+  description: "A Google Cloud - Go - Pulumi - Blueprint for creating a New Google Cloud Project with Supporting Configuration for project IAM, Service Accounts, DNS & Biiling Aleting."
   config: 
     GCPProject:Name: 
       type: string

@@ -15,9 +15,9 @@
 package project
 
 import (
-	"github.com/pulumi/pulumi-gcp/sdk/v6/go/gcp"
+	"fmt"
+
 	"github.com/pulumi/pulumi/sdk/v3/go/pulumi"
-	"github.com/pulumi/pulumi/sdk/v3/go/pulumi/config"
 	project "github.com/timbohiatt/google-cloud-pulumi/go/modules/project"
 )
 
@@ -30,7 +30,8 @@ type ProjectFactoryArgs struct {
 }
 
 // Create a Single Project from the Project Factory
-func NewProjectFactory(ctx *pulumi.Context, name string, args ProjectFactoryArgs, opts pulumi.ResourceOption) (state *ResourceState, err error) {
+func New(ctx *pulumi.Context, name string, args ProjectFactoryArgs, opts pulumi.ResourceOption) (state *ResourceState, err error) {
+	fmt.Println("Running Google Cloud Pulumi - Factory: Project")
 
 	// Module: Billing Alert
 
@@ -82,63 +83,4 @@ func NewProjectFactory(ctx *pulumi.Context, name string, args ProjectFactoryArgs
 	// Resource: Compute Subnetwork IAM Member
 
 	return state, err
-}
-
-// Individual Factory Execution
-func main() {
-
-	pulumi.Run(func(ctx *pulumi.Context) (err error) {
-
-		var provider *gcp.Provider
-
-		conf := config.New(ctx, "")
-
-		// Google Cloud Poject - Configuration
-		Name := conf.Require("GCPProject:Name")
-
-		// Run's Module: Project
-		_, err = NewProjectFactory(ctx, "sample-project-factory", &ProjectFactoryArgs{
-			ProjectArgs: &project.ProjectArgs{
-				AutoCreateNetwork: false,
-				//BillingAccount:    BillingAccount,
-				//Contacts                 []EssentialContactsObj
-				//CustomRoles              map[string]string
-				//DefaultServiceAccount: string,
-				//DescriptiveName: DescriptiveName,
-				//GroupIAM                 map[string]string
-				//IAM                      map[string]string
-				//IAMAdditive              map[string]string
-				//IAMAdditiveMembers       map[string]string
-				//Labels                   map[string]string
-				//LienReason               string
-				//LoggingExclusions        map[string]string
-				//LoggingSinks             map[string]LoggingSink
-				//MetricScopes             []string
-				Name: Name,
-				//OrgPolicies              map[string]OrgPolicy
-				//OrgPoliciesDataPath      string
-				//OSLogin                  bool
-				//OSLoginAdmins            []string
-				//OSLoginUsers             []string
-				//Parent: Parent,
-				//Prefix                   string
-				//ProjectCreate: true,
-				//ServiceConfig            ServiceConfigObj
-				//ServiceEncryptionKeyIds  map[string]string
-				//ServicePerimeterBridges  []string
-				//ServicePerimeterStandard string
-				//Services                 []string
-				//SharedVpcHostConfig      SharedVpcHostConfigObj
-				//SharedVpcServiceConfig   SharedVpcServiceConfigObj
-				//SkipDelete               bool
-				//TagBindings              map[string]string
-			},
-		}, pulumi.Provider(provider))
-		if err != nil {
-			// Error on Project Factory Creation
-			return err
-		}
-		// Project Factory Creation Completed
-		return err
-	})
 }

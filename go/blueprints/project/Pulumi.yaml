@@ -12,14 +12,14 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-name: google-cloud-module-project
-description: Google Foundations - Module - Project
+name: google-cloud-blueprint-project
+description: Google Foundations - Blueprint - Project
 runtime: go
 pulumi:disable-default-providers:
     - gcp
     - google-native
 template:
-  description: "A Google Cloud Go Pulumi Module for creating a New Google Cloud Project."
+  description: "A Google Cloud - Go - Pulumi - Blueprint for creating a New Google Cloud Project."
   config: 
     GCPProject:Name: 
       type: string
