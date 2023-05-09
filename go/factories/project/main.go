@@ -18,7 +18,7 @@ import (
 	"github.com/pulumi/pulumi-gcp/sdk/v6/go/gcp"
 	"github.com/pulumi/pulumi/sdk/v3/go/pulumi"
 	"github.com/pulumi/pulumi/sdk/v3/go/pulumi/config"
-	project "github.com/timbohiatt/google-cloud-pulumi/modules/go/project"
+	project "github.com/timbohiatt/google-cloud-pulumi/go/modules/project"
 )
 
 type ResourceState struct {
