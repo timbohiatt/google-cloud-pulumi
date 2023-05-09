@@ -1,6 +1,6 @@
-module google-cloud-module-project
+module github.com/timbohiatt/google-cloud-pulumi/go/modules/project
 
-go 1.18
+go 1.20
 
 require (
 	github.com/pulumi/pulumi-gcp/sdk/v6 v6.52.0
