@@ -125,7 +125,8 @@ func NewProject(ctx *pulumi.Context, name string, args *ProjectArgs, opts pulumi
 func main() {
 
 	pulumi.Run(func(ctx *pulumi.Context) (err error) {
-
+		var provider *gcp.Provider
+		
 		conf := config.New(ctx, "")
 
 		ExecutionServiceAccount := conf.Require("ExecutionServiceAccount")
@@ -136,7 +137,6 @@ func main() {
 		// Folder or Organization in which to deploy
 		Parent := conf.Require("Parent")
 
-		var provider *gcp.Provider
 		if ExecutionServiceAccount != "" {
 			accessToken, err := serviceaccount.GetAccountAccessToken(ctx, &serviceaccount.GetAccountAccessTokenArgs{
 				TargetServiceAccount: ExecutionServiceAccount,

@@ -19,7 +19,7 @@ pulumi:disable-default-providers:
     - gcp
     - google-native
 template:
-  description: "A Google Cloud Go Pulumi Module for Creating a New Google Cloud Project."
+  description: "A Google Cloud Go Pulumi Module for creating a New Google Cloud Project."
   config: 
     GCPProject:Name: 
       type: string
