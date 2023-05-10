@@ -38,7 +38,7 @@ func main() {
 		conf := config.New(ctx, "")
 
 		// Google Cloud Poject - Configuration
-		Name := conf.Require("GCPProject:Name")
+		Name := conf.Require("GCPProjectName")
 
 		// Run's Module: Project
 		_, err = projectfactory.New(ctx, "sample-project-factory", &projectfactory.Args{
