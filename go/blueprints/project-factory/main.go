@@ -38,8 +38,8 @@ func main() {
 		Name := conf.Require("GCPProject:Name")
 
 		// Run's Module: Project
-		_, err = projectfactory.New(ctx, "sample-project-factory", &projectfactory.ProjectFactoryArgs{
-			ProjectArgs: &project.ProjectArgs{
+		_, err = projectfactory.New(ctx, "sample-project-factory", &projectfactory.Args{
+			ProjectArgs: &project.Args{
 				//AutoCreateNetwork: false,
 				//BillingAccount:    BillingAccount,
 				//Contacts                 []EssentialContactsObj
