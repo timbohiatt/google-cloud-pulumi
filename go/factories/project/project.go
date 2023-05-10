@@ -40,10 +40,18 @@ func New(ctx *pulumi.Context, name string, args ProjectFactoryArgs, opts pulumi.
 	fmt.Println("Running Google Cloud Pulumi - Factory: Project")
 
 	// Module: Billing Alert
-	factoryBillingAlert, err := billingBudget.New(ctx, "project-factory-billing-alert", billingBudget.Args{})
+	factoryBillingAlert, err := billingBudget.New(ctx, "project-factory-billing-alert", billingBudget.Args{}, pulumi.ResourceOption)
+	if err != nil {
+		// Error Creating Billing Alert
+		return state, err
+	}
 
 	// Module: DNS
-	factoryDNS, err := dns.New(ctx, "project-factory-dns", dns.Args{})
+	factoryDNS, err := dns.New(ctx, "project-factory-dns", dns.Args{}, pulumi.ResourceOption)
+	if err != nil {
+		// Error Creating DNS
+		return state, err
+	}
 
 	// Module: Project
 	factoryProject, err := project.New(ctx, "project-factory-project", project.Args{
@@ -87,7 +95,11 @@ func New(ctx *pulumi.Context, name string, args ProjectFactoryArgs, opts pulumi.
 	}
 
 	// Module: Service Account
-	factoryIAMServiceAccount, err := iamServiceAccount.New(ctx, "project-factory-iam-service-account", iamServiceAccount.Args{})
+	factoryIAMServiceAccount, err := iamServiceAccount.New(ctx, "project-factory-iam-service-account", iamServiceAccount.Args{}, pulumi.ResourceOption)
+	if err != nil {
+		// Error Creating Service Account
+		return state, err
+	}
 
 	// Resource: Compute Subnetwork IAM Member
 	// TODO
