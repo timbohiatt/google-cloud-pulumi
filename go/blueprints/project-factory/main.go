@@ -42,12 +42,12 @@ func main() {
 
 		// Run's Module: Project
 		_, err = projectfactory.New(ctx, "sample-project-factory", &projectfactory.Args{
-			Project: &project.Args{
+			Project: project.Args{
 				Name: Name,
 			},
-			DNS:               &dns.Args{},
-			BillingBudget:     &billingBudget.Args{},
-			IAMServiceAccount: &iamServiceAccount.Args{},
+			DNS:               dns.Args{},
+			BillingBudget:     billingBudget.Args{},
+			IAMServiceAccount: iamServiceAccount.Args{},
 		}, pulumi.Provider(provider))
 		if err != nil {
 			// Error on Project Creation
