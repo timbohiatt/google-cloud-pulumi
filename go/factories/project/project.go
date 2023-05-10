@@ -17,6 +17,7 @@ package project
 import (
 	"fmt"
 
+	"github.com/pulumi/pulumi-gcp/sdk/v6/go/gcp"
 	"github.com/pulumi/pulumi/sdk/v3/go/pulumi"
 	billingBudget "github.com/timbohiatt/google-cloud-pulumi/go/modules/billing-budget"
 	dns "github.com/timbohiatt/google-cloud-pulumi/go/modules/dns"
@@ -42,21 +43,21 @@ func New(ctx *pulumi.Context, name string, args ProjectFactoryArgs, opts pulumi.
 	var provider *gcp.Provider
 
 	// Module: Billing Alert
-	factoryBillingAlert, err := billingBudget.New(ctx, "project-factory-billing-alert", billingBudget.Args{}, pulumi.Provider(provider))
+	_, err = billingBudget.New(ctx, "project-factory-billing-alert", billingBudget.Args{}, pulumi.Provider(provider))
 	if err != nil {
 		// Error Creating Billing Alert
 		return state, err
 	}
 
 	// Module: DNS
-	factoryDNS, err := dns.New(ctx, "project-factory-dns", dns.Args{}, pulumi.Provider(provider))
+	_, err = dns.New(ctx, "project-factory-dns", dns.Args{}, pulumi.Provider(provider))
 	if err != nil {
 		// Error Creating DNS
 		return state, err
 	}
 
 	// Module: Project
-	factoryProject, err := project.New(ctx, "project-factory-project", project.Args{
+	_, err = project.New(ctx, "project-factory-project", project.Args{
 		//AutoCreateNetwork: false,
 		//BillingAccount:    BillingAccount,
 		//Contacts                 []EssentialContactsObj
@@ -97,7 +98,7 @@ func New(ctx *pulumi.Context, name string, args ProjectFactoryArgs, opts pulumi.
 	}
 
 	// Module: Service Account
-	factoryIAMServiceAccount, err := iamServiceAccount.New(ctx, "project-factory-iam-service-account", iamServiceAccount.Args{}, pulumi.Provider(provider))
+	_, err = iamServiceAccount.New(ctx, "project-factory-iam-service-account", iamServiceAccount.Args{}, pulumi.Provider(provider))
 	if err != nil {
 		// Error Creating Service Account
 		return state, err
