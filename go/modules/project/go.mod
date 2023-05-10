@@ -1,4 +1,6 @@
-module github.com/timbohiatt/google-cloud-pulumi/go/modules/project
+//module github.com/timbohiatt/google-cloud-pulumi/go/modules/project
+module google-cloud-pulumi-go-modules-project
+
 
 go 1.20
 
