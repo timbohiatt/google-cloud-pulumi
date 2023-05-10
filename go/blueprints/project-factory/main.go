@@ -21,6 +21,9 @@ import (
 	"github.com/pulumi/pulumi/sdk/v3/go/pulumi"
 	"github.com/pulumi/pulumi/sdk/v3/go/pulumi/config"
 	projectfactory "github.com/timbohiatt/google-cloud-pulumi/go/factories/project-factory"
+	billingBudget "github.com/timbohiatt/google-cloud-pulumi/go/modules/billing-budget"
+	dns "github.com/timbohiatt/google-cloud-pulumi/go/modules/dns"
+	iamServiceAccount "github.com/timbohiatt/google-cloud-pulumi/go/modules/iam-service-account"
 	project "github.com/timbohiatt/google-cloud-pulumi/go/modules/project"
 )
 
@@ -39,41 +42,12 @@ func main() {
 
 		// Run's Module: Project
 		_, err = projectfactory.New(ctx, "sample-project-factory", &projectfactory.Args{
-			ProjectArgs: &project.Args{
-				//AutoCreateNetwork: false,
-				//BillingAccount:    BillingAccount,
-				//Contacts                 []EssentialContactsObj
-				//CustomRoles              map[string]string
-				//DefaultServiceAccount: string,
-				//DescriptiveName: DescriptiveName,
-				//GroupIAM                 map[string]string
-				//IAM                      map[string]string
-				//IAMAdditive              map[string]string
-				//IAMAdditiveMembers       map[string]string
-				//Labels                   map[string]string
-				//LienReason               string
-				//LoggingExclusions        map[string]string
-				//LoggingSinks             map[string]LoggingSink
-				//MetricScopes             []string
+			Project: &project.Args{
 				Name: Name,
-				//OrgPolicies              map[string]OrgPolicy
-				//OrgPoliciesDataPath      string
-				//OSLogin                  bool
-				//OSLoginAdmins            []string
-				//OSLoginUsers             []string
-				//Parent: Parent,
-				//Prefix                   string
-				//ProjectCreate: true,
-				//ServiceConfig            ServiceConfigObj
-				//ServiceEncryptionKeyIds  map[string]string
-				//ServicePerimeterBridges  []string
-				//ServicePerimeterStandard string
-				//Services                 []string
-				//SharedVpcHostConfig      SharedVpcHostConfigObj
-				//SharedVpcServiceConfig   SharedVpcServiceConfigObj
-				//SkipDelete               bool
-				//TagBindings              map[string]string
 			},
+			DNS:               &dns.Args{},
+			BillingBudget:     &billingBudget.Args{},
+			IAMServiceAccount: &iamServiceAccount.Args{},
 		}, pulumi.Provider(provider))
 		if err != nil {
 			// Error on Project Creation
