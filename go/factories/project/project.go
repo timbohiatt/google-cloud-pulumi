@@ -43,21 +43,21 @@ func New(ctx *pulumi.Context, name string, args ProjectFactoryArgs, opts pulumi.
 	var provider *gcp.Provider
 
 	// Module: Billing Alert
-	_, err = billingBudget.New(ctx, "project-factory-billing-alert", billingBudget.Args{}, pulumi.Provider(provider))
+	_, err = billingBudget.New(ctx, "project-factory-billing-alert", &billingBudget.Args{}, pulumi.Provider(provider))
 	if err != nil {
 		// Error Creating Billing Alert
 		return state, err
 	}
 
 	// Module: DNS
-	_, err = dns.New(ctx, "project-factory-dns", dns.Args{}, pulumi.Provider(provider))
+	_, err = dns.New(ctx, "project-factory-dns", &dns.Args{}, pulumi.Provider(provider))
 	if err != nil {
 		// Error Creating DNS
 		return state, err
 	}
 
 	// Module: Project
-	_, err = project.New(ctx, "project-factory-project", project.Args{
+	_, err = project.New(ctx, "project-factory-project", &project.Args{
 		//AutoCreateNetwork: false,
 		//BillingAccount:    BillingAccount,
 		//Contacts                 []EssentialContactsObj
@@ -98,7 +98,7 @@ func New(ctx *pulumi.Context, name string, args ProjectFactoryArgs, opts pulumi.
 	}
 
 	// Module: Service Account
-	_, err = iamServiceAccount.New(ctx, "project-factory-iam-service-account", iamServiceAccount.Args{}, pulumi.Provider(provider))
+	_, err = iamServiceAccount.New(ctx, "project-factory-iam-service-account", &iamServiceAccount.Args{}, pulumi.Provider(provider))
 	if err != nil {
 		// Error Creating Service Account
 		return state, err
