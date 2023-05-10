@@ -29,7 +29,7 @@ type ResourceState struct {
 	pulumi.ResourceState
 }
 
-type ProjectFactoryArgs struct {
+type Args struct {
 	Project           project.Args
 	DNS               dns.Args
 	BillingBudget     billingBudget.Args
@@ -37,7 +37,7 @@ type ProjectFactoryArgs struct {
 }
 
 // Create a Single Project from the Project Factory
-func New(ctx *pulumi.Context, name string, args ProjectFactoryArgs, opts pulumi.ResourceOption) (state *ResourceState, err error) {
+func New(ctx *pulumi.Context, name string, args Args, opts pulumi.ResourceOption) (state *ResourceState, err error) {
 	fmt.Println("Running Google Cloud Pulumi - Factory: Project")
 
 	var provider *gcp.Provider
