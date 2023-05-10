@@ -37,7 +37,7 @@ type Args struct {
 }
 
 // Create a Single Project from the Project Factory
-func New(ctx *pulumi.Context, name string, args Args, opts pulumi.ResourceOption) (state *ResourceState, err error) {
+func New(ctx *pulumi.Context, name string, args *Args, opts pulumi.ResourceOption) (state *ResourceState, err error) {
 	fmt.Println("Running Google Cloud Pulumi - Factory: Project")
 
 	var provider *gcp.Provider
