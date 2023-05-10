@@ -28,13 +28,13 @@ func main() {
 
 	pulumi.Run(func(ctx *pulumi.Context) (err error) {
 		fmt.Println("Running Google Cloud Pulumi - Blueprint: Project")
-		
+
 		var provider *gcp.Provider
 
 		conf := config.New(ctx, "")
 
 		// Google Cloud Poject - Configuration
-		Name := conf.Require("GCPProject:Name")
+		Name := conf.Require("GCPProjectName")
 
 		// Run's Module: Project
 		_, err = project.New(ctx, "sample-project", &project.ProjectArgs{

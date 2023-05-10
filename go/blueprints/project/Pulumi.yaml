@@ -21,9 +21,9 @@ pulumi:disable-default-providers:
 template:
   description: "A Google Cloud - Go - Pulumi - Blueprint for creating a New Google Cloud Project."
   config: 
-    GCPProject:Name: 
-      type: string
-      description: "The display name of the new Google Cloud project"
+    #GCPProject:Name: 
+    #  type: string
+    #  description: "The display name of the new Google Cloud project"
     #GCPProject:Prefix: 
     #  type: string
     #  description: "Optional prefix used to generate project id and name."
@@ -48,3 +48,6 @@ template:
     Parent: 
       type: string
       description: "The parent folder or organization in which to create the new Google Cloud Project (Format. organization/xxxxxxxxx || folder/xxxxxxxxx)"
+    GCPProjectName: 
+      type: string
+      description: "The display name of the new Google Cloud project"
