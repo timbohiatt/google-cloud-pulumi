@@ -30,10 +30,10 @@ type ResourceState struct {
 }
 
 type Args struct {
-	Project           project.Args
-	DNS               dns.Args
-	BillingBudget     billingBudget.Args
-	IAMServiceAccount iamServiceAccount.Args
+	Project           *project.Args
+	DNS               *dns.Args
+	BillingBudget     *billingBudget.Args
+	IAMServiceAccount *iamServiceAccount.Args
 }
 
 // Create a Single Project from the Project Factory

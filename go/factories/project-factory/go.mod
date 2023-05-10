@@ -1,4 +1,4 @@
-module github.com/timbohiatt/google-cloud-pulumi/go/factories/project
+module github.com/timbohiatt/google-cloud-pulumi/go/factories/project-factory
 
 go 1.20
 
