@@ -29,7 +29,10 @@ type ResourceState struct {
 }
 
 type ProjectFactoryArgs struct {
-	ProjectArgs project.ProjectArgs
+	Project           project.Args
+	DNS               dns.Args
+	BillingBudget     billingBudget.Args
+	IAMServiceAccount iamServiceAccount.Args
 }
 
 // Create a Single Project from the Project Factory
@@ -37,13 +40,13 @@ func New(ctx *pulumi.Context, name string, args ProjectFactoryArgs, opts pulumi.
 	fmt.Println("Running Google Cloud Pulumi - Factory: Project")
 
 	// Module: Billing Alert
-	factoryBillingAlert, err := billingBudget.NewProject(ctx*pulumi.Context, "project-factory-billing-alert", billingBudget.Args{})
+	factoryBillingAlert, err := billingBudget.New(ctx*pulumi.Context, "project-factory-billing-alert", billingBudget.Args{})
 
 	// Module: DNS
-	factoryDNS, err := dns.NewProject(ctx*pulumi.Context, "project-factory-dns", dns.Args{})
+	factoryDNS, err := dns.New(ctx*pulumi.Context, "project-factory-dns", dns.Args{})
 
 	// Module: Project
-	factoryProject, err := project.NewProject(ctx*pulumi.Context, "project-factory-project", project.Args{
+	factoryProject, err := project.New(ctx*pulumi.Context, "project-factory-project", project.Args{
 		//AutoCreateNetwork: false,
 		//BillingAccount:    BillingAccount,
 		//Contacts                 []EssentialContactsObj
@@ -84,7 +87,7 @@ func New(ctx *pulumi.Context, name string, args ProjectFactoryArgs, opts pulumi.
 	}
 
 	// Module: Service Account
-	factoryIAMServiceAccount, err := iamServiceAccount.NewProject(ctx*pulumi.Context, "project-factory-iam-service-account", iamServiceAccount.Args{})
+	factoryIAMServiceAccount, err := iamServiceAccount.New(ctx*pulumi.Context, "project-factory-iam-service-account", iamServiceAccount.Args{})
 
 	// Resource: Compute Subnetwork IAM Member
 	// TODO
