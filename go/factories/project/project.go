@@ -39,15 +39,17 @@ type ProjectFactoryArgs struct {
 func New(ctx *pulumi.Context, name string, args ProjectFactoryArgs, opts pulumi.ResourceOption) (state *ResourceState, err error) {
 	fmt.Println("Running Google Cloud Pulumi - Factory: Project")
 
+	var provider *gcp.Provider
+
 	// Module: Billing Alert
-	factoryBillingAlert, err := billingBudget.New(ctx, "project-factory-billing-alert", billingBudget.Args{}, pulumi.ResourceOption)
+	factoryBillingAlert, err := billingBudget.New(ctx, "project-factory-billing-alert", billingBudget.Args{}, pulumi.Provider(provider))
 	if err != nil {
 		// Error Creating Billing Alert
 		return state, err
 	}
 
 	// Module: DNS
-	factoryDNS, err := dns.New(ctx, "project-factory-dns", dns.Args{}, pulumi.ResourceOption)
+	factoryDNS, err := dns.New(ctx, "project-factory-dns", dns.Args{}, pulumi.Provider(provider))
 	if err != nil {
 		// Error Creating DNS
 		return state, err
@@ -88,14 +90,14 @@ func New(ctx *pulumi.Context, name string, args ProjectFactoryArgs, opts pulumi.
 		//SharedVpcServiceConfig   SharedVpcServiceConfigObj
 		//SkipDelete               bool
 		//TagBindings              map[string]string
-	}, pulumi.ResourceOption)
+	}, pulumi.Provider(provider))
 	if err != nil {
 		// Error Creating Project
 		return state, err
 	}
 
 	// Module: Service Account
-	factoryIAMServiceAccount, err := iamServiceAccount.New(ctx, "project-factory-iam-service-account", iamServiceAccount.Args{}, pulumi.ResourceOption)
+	factoryIAMServiceAccount, err := iamServiceAccount.New(ctx, "project-factory-iam-service-account", iamServiceAccount.Args{}, pulumi.Provider(provider))
 	if err != nil {
 		// Error Creating Service Account
 		return state, err
