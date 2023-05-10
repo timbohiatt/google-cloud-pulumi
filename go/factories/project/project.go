@@ -18,6 +18,9 @@ import (
 	"fmt"
 
 	"github.com/pulumi/pulumi/sdk/v3/go/pulumi"
+	billingBudget "github.com/timbohiatt/google-cloud-pulumi/go/modules/billing-budget"
+	dns "github.com/timbohiatt/google-cloud-pulumi/go/modules/dns"
+	iamServiceAccount "github.com/timbohiatt/google-cloud-pulumi/go/modules/iam-service-account"
 	project "github.com/timbohiatt/google-cloud-pulumi/go/modules/project"
 )
 
@@ -34,11 +37,13 @@ func New(ctx *pulumi.Context, name string, args ProjectFactoryArgs, opts pulumi.
 	fmt.Println("Running Google Cloud Pulumi - Factory: Project")
 
 	// Module: Billing Alert
+	factoryBillingAlert, err := billingBudget.NewProject(ctx*pulumi.Context, "project-factory-billing-alert", billingBudget.Args{})
 
 	// Module: DNS
+	factoryDNS, err := dns.NewProject(ctx*pulumi.Context, "project-factory-dns", dns.Args{})
 
 	// Module: Project
-	factoryProject, err := project.NewProject(ctx*pulumi.Context, "project-factory-project", project.ProjectArgs{
+	factoryProject, err := project.NewProject(ctx*pulumi.Context, "project-factory-project", project.Args{
 		//AutoCreateNetwork: false,
 		//BillingAccount:    BillingAccount,
 		//Contacts                 []EssentialContactsObj
@@ -79,8 +84,10 @@ func New(ctx *pulumi.Context, name string, args ProjectFactoryArgs, opts pulumi.
 	}
 
 	// Module: Service Account
+	factoryIAMServiceAccount, err := iamServiceAccount.NewProject(ctx*pulumi.Context, "project-factory-iam-service-account", iamServiceAccount.Args{})
 
 	// Resource: Compute Subnetwork IAM Member
+	// TODO
 
 	return state, err
 }

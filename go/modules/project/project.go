@@ -81,7 +81,7 @@ type EssentialContactsObj struct {
 	LanguageTag string //Optional
 }
 
-type ProjectArgs struct {
+type Args struct {
 	AutoCreateNetwork        bool
 	BillingAccount           string
 	Contacts                 []EssentialContactsObj
@@ -130,7 +130,7 @@ var ParentId string
 var Prefix string
 var Project ProjectObj
 
-func New(ctx *pulumi.Context, name string, args *ProjectArgs, opts pulumi.ResourceOption) (state *ResourceState, err error) {
+func New(ctx *pulumi.Context, name string, args *Args, opts pulumi.ResourceOption) (state *ResourceState, err error) {
 	fmt.Println("Running Google Cloud Pulumi - Module: Project")
 	return state, err
 }
