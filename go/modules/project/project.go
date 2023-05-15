@@ -251,12 +251,12 @@ func New(ctx *pulumi.Context, name string, args *Args, opts pulumi.ResourceOptio
 			gcpProjectService, err := projects.NewService(ctx, fmt.Sprintf("%s-gcp-project-service-%s-%d", urnPrefix, Service, idxService), &projects.ServiceArgs{
 				DisableDependentServices: pulumi.Bool(args.ServiceConfig.DisableDependentServices),
 				DisableOnDestroy:         pulumi.Bool(args.ServiceConfig.DisableOnDestroy),
-				Project:                  pulumi.String(gcpProject),
+				Project:                  gcpProject.Id,
 				Service:                  pulumi.String(Service),
 			})
 			if err != nil {
 				// Error Creating Resource - Google Cloud Project Service
-				return err
+				return state, err
 			}
 
 			// add Google Cloud Project Service to collection
@@ -278,7 +278,7 @@ func New(ctx *pulumi.Context, name string, args *Args, opts pulumi.ResourceOptio
 			}, pulumi.DependsOn([]pulumi.Resource{gcpProjectServices}))
 			if err != nil {
 				// Error Creating Resource - Google Cloud Project Metadata Item - OS Login
-				return err
+				return state, err
 			}
 			if args.PulumiExport {
 				// export - resoruce - Google Cloud Project Metadata Item - OS Login
@@ -301,7 +301,7 @@ func New(ctx *pulumi.Context, name string, args *Args, opts pulumi.ResourceOptio
 			})
 			if err != nil {
 				// Error Creating Resource - Google Cloud Resource Lien
-				return err
+				return state, err
 			}
 			if args.PulumiExport {
 				// export - resoruce - Google Cloud Resource Lien
@@ -313,12 +313,12 @@ func New(ctx *pulumi.Context, name string, args *Args, opts pulumi.ResourceOptio
 		for idxMetricScope, MetricScope := range args.MetricScopes {
 			// resource - [Classic] - Google Cloud Monitored Project
 			gcpProjectMonitored, err := monitoring.NewMonitoredProject(ctx, fmt.Sprintf("%s-gcp-project-monitored-project-metric-scope-%d", urnPrefix, idxMetricScope), &monitoring.MonitoredProjectArgs{
-				Name:         gcpProject,
+				Name:         gcpProject.Id,
 				MetricsScope: pulumi.String(MetricScope),
 			})
 			if err != nil {
 				// Error Creating Resource - Google Cloud Monitored Project - Metric Scopes
-				return err
+				return state, err
 			}
 			if args.PulumiExport {
 				// export - resoruce - Google Cloud Monitored Project - Metric Scopes
