@@ -36,4 +36,4 @@ template:
       description: "The parent folder or organization in which to create the new Google Cloud Project (Format. organization/xxxxxxxxx || folder/xxxxxxxxx)"
     GCPPrefix: 
       type: string
-      description: "Optional prefix used to generate project id and name.""
+      description: "Optional prefix used to generate project id and name."
