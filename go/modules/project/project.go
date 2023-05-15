@@ -23,7 +23,6 @@ import (
 	organizations "github.com/pulumi/pulumi-gcp/sdk/v6/go/gcp/organizations"
 	projects "github.com/pulumi/pulumi-gcp/sdk/v6/go/gcp/projects"
 	resourcemanager "github.com/pulumi/pulumi-gcp/sdk/v6/go/gcp/resourcemanager"
-	cloudresourcemanager "github.com/pulumi/pulumi-google-native/sdk/go/google/cloudresourcemanager/v3.Project"
 	"github.com/pulumi/pulumi/sdk/v3/go/pulumi"
 )
 
@@ -211,7 +210,7 @@ func New(ctx *pulumi.Context, name string, args *Args, opts pulumi.ResourceOptio
 	}
 
 	// var - Google Cloud Project resource
-	var gcpProject *cloudresourcemanager.Project
+	var gcpProject *organizations.Project
 
 	// flag - bool - Create Project?
 	if args.ProjectCreate {
