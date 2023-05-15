@@ -18,7 +18,11 @@ import (
 	"fmt"
 	"strings"
 
+	compute "github.com/pulumi/pulumi-gcp/sdk/v6/go/gcp/compute"
+	monitoring "github.com/pulumi/pulumi-gcp/sdk/v6/go/gcp/monitoring"
 	organizations "github.com/pulumi/pulumi-gcp/sdk/v6/go/gcp/organizations"
+	projects "github.com/pulumi/pulumi-gcp/sdk/v6/go/gcp/projects"
+	resourcemanager "github.com/pulumi/pulumi-gcp/sdk/v6/go/gcp/resourcemanager"
 	cloudresourcemanager "github.com/pulumi/pulumi-google-native/sdk/go/google/cloudresourcemanager/v3.Project"
 	"github.com/pulumi/pulumi/sdk/v3/go/pulumi"
 )
@@ -64,10 +68,10 @@ type ResourceState struct {
 	Conition          OrgPolicyCondition //Optional
 }*/
 
-/*type ServiceConfigObj struct {
-	DisableOnDestroy         bool
-	DisableDependentServices bool
-}*/
+type ServiceConfigArgs struct {
+	DisableOnDestroy         bool // Default False
+	DisableDependentServices bool // Default False
+}
 
 /*type SharedVpcHostConfigObj struct {
 	Enabled         bool
@@ -85,9 +89,9 @@ type ResourceState struct {
 }*/
 
 type Args struct {
-	PulumiExport bool
-	//AutoCreateNetwork        bool
-	BillingAccount string
+	PulumiExport      bool // Default False
+	AutoCreateNetwork bool // Default False
+	BillingAccount    string
 	//Contacts                 []EssentialContactsObj
 	//CustomRoles              map[string]string
 	//DefaultServiceAccount    string
@@ -97,27 +101,27 @@ type Args struct {
 	//IAMAdditive              map[string]string
 	//IAMAdditiveMembers       map[string]string
 	//Labels                   map[string]string
-	//LienReason               string
+	LienReason string
 	//LoggingExclusions        map[string]string
 	//LoggingSinks             map[string]LoggingSink
-	//MetricScopes             []string
-	Name string
+	MetricScopes []string
+	Name         string
 	//OrgPolicies              map[string]OrgPolicy
 	//OrgPoliciesDataPath      string
-	//OSLogin                  bool
+	OSLogin bool
 	//OSLoginAdmins            []string
 	//OSLoginUsers             []string
 	Parent        string
 	Prefix        string
-	ProjectCreate bool
-	//ServiceConfig            ServiceConfigObj
+	ProjectCreate bool // Default False
+	ServiceConfig ServiceConfigArgs
 	//ServiceEncryptionKeyIds  map[string]string
 	//ServicePerimeterBridges  []string
 	//ServicePerimeterStandard string
-	//Services                 []string
+	Services []string
 	//SharedVpcHostConfig      SharedVpcHostConfigObj
 	//SharedVpcServiceConfig   SharedVpcServiceConfigObj
-	//SkipDelete               bool
+	SkipDelete bool // Default False
 	//TagBindings              map[string]string
 }
 
@@ -226,10 +230,10 @@ func New(ctx *pulumi.Context, name string, args *Args, opts pulumi.ResourceOptio
 
 		projectArgs{
 			ProjectId:         pulumi.String(locals.ProjectId),
-			AutoCreateNetwork: pulumi.Bool(false),                 // TODO: Add Variable Support, Add Validation Routine
-			BillingAccount:    pulumi.String(args.BillingAccount), // TODO: Add Variable Support, Add Validation Routine
+			AutoCreateNetwork: pulumi.Bool(args.AutoCreateNetwork), // TODO: Add Variable Support, Add Validation Routine
+			BillingAccount:    pulumi.String(args.BillingAccount),  // TODO: Add Variable Support, Add Validation Routine
 			Name:              pulumi.String(locals.DescriptiveName),
-			SkipDelete:        pulumi.Bool(false), // TODO: Add Variable Support, Add Validation Routine
+			SkipDelete:        pulumi.Bool(args.SkipDelete), // TODO: Add Variable Support, Add Validation Routine
 			//Labels: MAP?pulumi.String()			// TODO: Add Variable Support, Add Validation Routine
 		}
 
@@ -239,12 +243,95 @@ func New(ctx *pulumi.Context, name string, args *Args, opts pulumi.ResourceOptio
 			// Error Creating Resource -  Google Cloud Project
 			return state, err
 		}
-		// flag - bool - Export Resource?
-		if args.PulumiExport {
-			// export - resoruce - Google Cloud Project
-			ctx.Export(fmt.Sprintf("%s-gcp-project", urnPrefix), gcpProject) // TODO: Fix ARN String, Use Routine
+
+		// instanciate - Resource Collection - Google Cloud Project Services
+		var gcpProjectServices []*projects.Service
+
+		// resource - [Classic] - Google Cloud Project Service
+		for idxService, Service := range args.Services {
+			gcpProjectService, err := projects.NewService(ctx, fmt.Sprintf("%s-gcp-project-service-%s-%d", urnPrefix, Service, idxService), &projects.ServiceArgs{
+				DisableDependentServices: pulumi.Bool(args.ServiceConfig.DisableDependentServices),
+				DisableOnDestroy:         pulumi.Bool(args.ServiceConfig.DisableOnDestroy),
+				Project:                  pulumi.String(gcpProject),
+				Service:                  pulumi.String(Service),
+			})
+			if err != nil {
+				// Error Creating Resource - Google Cloud Project Service
+				return err
+			}
+
+			// add Google Cloud Project Service to collection
+			gcpProjectServices = append(gcpProjectServices, gcpProjectService)
+
+			// flag - bool - Export Resource?
+			if args.PulumiExport {
+				// export - resoruce - Google Cloud Project Service
+				ctx.Export(fmt.Sprintf("%s-gcp-project-service-%s-%d", urnPrefix, Service, idxService), gcpProjectService) // TODO: Fix ARN String, Use Routine
+			}
 		}
 
+		// flag - bool - Enable OS Login?
+		if args.OSLogin {
+			// resource - [Classic] - Google Cloud Project Metadata Item - OS Login
+			gcpProjectMetadataItemOSLogin, err := compute.NewProjectMetadataItem(ctx, fmt.Sprintf("%s-gcp-project-metadata-oslogin", urnPrefix), &compute.ProjectMetadataItemArgs{
+				Key:   pulumi.String("enable-oslogin"),
+				Value: pulumi.String("TRUE"),
+			}, pulumi.DependsOn([]pulumi.Resource{gcpProjectServices}))
+			if err != nil {
+				// Error Creating Resource - Google Cloud Project Metadata Item - OS Login
+				return err
+			}
+			if args.PulumiExport {
+				// export - resoruce - Google Cloud Project Metadata Item - OS Login
+				ctx.Export(fmt.Sprintf("%s-gcp-project-metadata-oslogin", urnPrefix), gcpProjectMetadataItemOSLogin) // TODO: Fix ARN String, Use Routine
+			}
+		}
+
+		// flag - not nil - Create Resource Lien (Project Delete)?
+		if args.LienReason != "" {
+			// resource - [Classic] - Google Cloud Resource Lien
+			gcpProjectLien, err := resourcemanager.NewLien(ctx, fmt.Sprintf("%s-gcp-project-lien", urnPrefix), &resourcemanager.LienArgs{
+				Origin: pulumi.String("created-by-pulumi"),
+				Parent: gcpProject.Number.ApplyT(func(number string) (string, error) {
+					return fmt.Sprintf("projects/%v", number), nil
+				}).(pulumi.StringOutput),
+				Reason: pulumi.String(args.LienReason),
+				Restrictions: pulumi.StringArray{
+					pulumi.String("resourcemanager.projects.delete"),
+				},
+			})
+			if err != nil {
+				// Error Creating Resource - Google Cloud Resource Lien
+				return err
+			}
+			if args.PulumiExport {
+				// export - resoruce - Google Cloud Resource Lien
+				ctx.Export(fmt.Sprintf("%s-gcp-project-lien", urnPrefix), gcpProjectLien) // TODO: Fix ARN String, Use Routine
+			}
+		}
+
+		// resource - [Classic] - Google Cloud Monitored Project - Metric Scopes
+		for idxMetricScope, MetricScope := range args.MetricScopes {
+			// resource - [Classic] - Google Cloud Monitored Project
+			gcpProjectMonitored, err := monitoring.NewMonitoredProject(ctx, fmt.Sprintf("%s-gcp-project-monitored-project-metric-scope-%d", urnPrefix, idxMetricScope), &monitoring.MonitoredProjectArgs{
+				Name:         gcpProject,
+				MetricsScope: pulumi.String(MetricScope),
+			})
+			if err != nil {
+				// Error Creating Resource - Google Cloud Monitored Project - Metric Scopes
+				return err
+			}
+			if args.PulumiExport {
+				// export - resoruce - Google Cloud Monitored Project - Metric Scopes
+				ctx.Export(fmt.Sprintf("%s-gcp-project-monitored-project-metric-scope-%d", urnPrefix, idxMetricScope), gcpProjectMonitored) // TODO: Fix ARN String, Use Routine
+			}
+		}
+	}
+
+	// flag - bool - Export Resource?
+	if args.PulumiExport {
+		// export - resoruce - Google Cloud Project
+		ctx.Export(fmt.Sprintf("%s-gcp-project", urnPrefix), gcpProject) // TODO: Fix ARN String, Use Routine
 	}
 
 	return state, err

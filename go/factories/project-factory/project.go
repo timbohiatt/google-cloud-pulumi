@@ -30,6 +30,7 @@ type ResourceState struct {
 }
 
 type Args struct {
+	PulumiExport bool
 	Project           project.Args
 	DNS               dns.Args
 	BillingBudget     billingBudget.Args
