@@ -23,6 +23,13 @@ import (
 	project "github.com/timbohiatt/google-cloud-pulumi/go/modules/project"
 )
 
+// Blueprint Configuratuion
+// Constants
+const blueprintName string = "project"
+
+// Variables
+var urnPrefix string = fmt.Sprintf("blueprint-%s", blueprintName)
+
 // Individual Blueprint Execution
 func main() {
 
@@ -34,42 +41,71 @@ func main() {
 		conf := config.New(ctx, "")
 
 		// Google Cloud Poject - Configuration
-		Name := conf.Require("GCPProjectName")
+
+		// Required
+		Name := conf.Require("GCPName")                     // Google Cloud Project Name
+		BillingAccount := conf.Require("GCPBillingAccount") // Google Cloud Billing Account
+		Parent := conf.Require("GCPParent")                 // Google Cloud Parent Organisation or Folder
+
+		// Optional
+		Prefix, err := conf.TryString("GCPPrefix")
+		if err != nil {
+			Prefix = ""
+		}
+		DescriptiveName, err := conf.TryString("GCPDescriptiveName")
+		if err != nil {
+			DescriptiveName = ""
+		}
+		LienReason, err := conf.TryString("GCPLienReason")
+		if err != nil {
+			LienReason = ""
+		}
 
 		// Run's Module: Project
-		_, err = project.New(ctx, "sample-project", &project.ProjectArgs{
-			//AutoCreateNetwork: false,
-			//BillingAccount:    BillingAccount,
+		_, err = project.New(ctx, fmt.Sprintf("%s", urnPrefix), &project.ProjectArgs{
+			PulumiExport:      true,
+			AutoCreateNetwork: false,
+			BillingAccount:    BillingAccount,
 			//Contacts                 []EssentialContactsObj
 			//CustomRoles              map[string]string
 			//DefaultServiceAccount: string,
-			//DescriptiveName: DescriptiveName,
+			DescriptiveName: DescriptiveName,
 			//GroupIAM                 map[string]string
 			//IAM                      map[string]string
 			//IAMAdditive              map[string]string
 			//IAMAdditiveMembers       map[string]string
 			//Labels                   map[string]string
-			//LienReason               string
+			LienReason: LienReason,
 			//LoggingExclusions        map[string]string
 			//LoggingSinks             map[string]LoggingSink
-			//MetricScopes             []string
+			MetricScopes: []string{
+				"AllEnvironments",
+			},
 			Name: Name,
 			//OrgPolicies              map[string]OrgPolicy
 			//OrgPoliciesDataPath      string
-			//OSLogin                  bool
+			OSLogin: true,
 			//OSLoginAdmins            []string
 			//OSLoginUsers             []string
-			//Parent: Parent,
+			Parent: Parent,
+			Prefix: Prefix,
 			//Prefix                   string
-			//ProjectCreate: true,
-			//ServiceConfig            ServiceConfigObj
+			ProjectCreate: true,
+			ServiceConfig: &project.ServiceConfigArgs{
+				DisableOnDestroy:         false,
+				DisableDependentServices: false,
+			},
 			//ServiceEncryptionKeyIds  map[string]string
 			//ServicePerimeterBridges  []string
 			//ServicePerimeterStandard string
-			//Services                 []string
+			Services: []string{
+				"storage.googleapis.com",
+				"stackdriver.googleapis.com",
+				"compute.googleapis.com",
+			},
 			//SharedVpcHostConfig      SharedVpcHostConfigObj
 			//SharedVpcServiceConfig   SharedVpcServiceConfigObj
-			//SkipDelete               bool
+			SkipDelete: false,
 			//TagBindings              map[string]string
 		}, pulumi.Provider(provider))
 		if err != nil {

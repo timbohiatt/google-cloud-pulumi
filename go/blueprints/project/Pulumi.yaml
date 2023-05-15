@@ -21,33 +21,19 @@ pulumi:disable-default-providers:
 template:
   description: "A Google Cloud - Go - Pulumi - Blueprint for creating a New Google Cloud Project."
   config: 
-    #GCPProject:Name: 
-    #  type: string
-    #  description: "The display name of the new Google Cloud project"
-    #GCPProject:Prefix: 
-    #  type: string
-    #  description: "Optional prefix used to generate project id and name."
-    #  default: ""
-    #GCPProject:ID: 
-    #  type: string
-    #  description: "The Globally unique ID for the Google Cloud project (max 30 characters)."
-    #GCPProject:OSLogin: 
-    #  type: boolean
-    #  description: "Enable OS Login?"
-    #  default: false
-    #GCPProject:DefaultServiceAccount:
-    #  description: "Project default service account setting: can be one of `delete`, `deprivilege`, `disable`, or `keep`."
-    #  default: "keep"
-    ExecutionServiceAccount:
+    GCPName:
       type: string
-      description: "Execute Pulumi with Specific Google Cloud Service Account"
+      description: "Project name and id suffix."
+    GCPDescriptiveName: 
+      type: string
+      description: "Optional Descriptive Name of the Google Cloud project."
       default: ""
-    BillingAccount: 
+    GCPBillingAccount: 
       type: string
       description: "The Billing account ID to be associated with the New Google Cloud Project."
-    Parent: 
+    GCPParent: 
       type: string
       description: "The parent folder or organization in which to create the new Google Cloud Project (Format. organization/xxxxxxxxx || folder/xxxxxxxxx)"
-    GCPProjectName: 
+    GCPPrefix: 
       type: string
-      description: "The display name of the new Google Cloud project"
+      description: "Optional prefix used to generate project id and name.""
