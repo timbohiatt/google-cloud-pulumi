@@ -33,7 +33,7 @@ template:
       description: "The Billing account ID to be associated with the New Google Cloud Project"
     GCPParent: 
       type: string
-      description: "The parent folder or organization in which to create the new Google Cloud Project (Format. organization/xxxxxxxxx || folder/xxxxxxxxx)"
+      description: "The parent folder or organization in which to create the new Google Cloud Project (Format. organizations/xxxxxxxxx || folders/xxxxxxxxx)"
     GCPPrefix: 
       type: string
       description: "Optional - Prefix used to generate project id and name"
