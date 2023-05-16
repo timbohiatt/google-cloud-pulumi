@@ -37,41 +37,31 @@ func main() {
 	pulumi.Run(func(ctx *pulumi.Context) (err error) {
 		fmt.Println("Running Google Cloud Pulumi - Blueprint: Project")
 
-		execServiceAccount := "thiatt-provisioning@joonix-security-accounts.iam.gserviceaccount.com"
-
+		// Instanciate Pulumi Provider
 		var provider *gcp.Provider
 
-		/*
-
-			GARYS STUFF
-
-		*/
-
+		// Instanciate Pulumi Config
 		conf := config.New(ctx, "")
 
 		// Google Cloud Poject - Configuration
-
 		// Required
-		Name := conf.Require("GCPName")                     // Google Cloud Project Name
-		BillingAccount := conf.Require("GCPBillingAccount") // Google Cloud Billing Account
-		Parent := conf.Require("GCPParent")                 // Google Cloud Parent Organisation or Folder
-
+		Name := conf.Require("GCPName")                     // [Required] Google Cloud Project Name
+		BillingAccount := conf.Require("GCPBillingAccount") // [Required] Google Cloud Billing Account
+		Parent := conf.Require("GCPParent")                 // [Required] Google Cloud Parent Organisation or Folder
 		// Optional
-		Prefix, err := conf.Try("GCPPrefix")
+		Prefix, err := conf.Try("GCPPrefix") // [Optional] Google Cloud Project Prefix
 		if err != nil {
 			Prefix = ""
 		}
-
-		DescriptiveName, err := conf.Try("GCPDescriptiveName")
+		DescriptiveName, err := conf.Try("GCPDescriptiveName") // [Optional] Google Cloud Project Descriptive Name
 		if err != nil {
 			DescriptiveName = ""
 		}
-		LienReason, err := conf.Try("GCPLienReason")
+		LienReason, err := conf.Try("GCPLienReason") // // [Optional] Google Cloud Lien Reason
 		if err != nil {
 			LienReason = ""
 		}
-
-		ExecutionServiceAccountEmail, err := conf.Try("ExecutionServiceAccountEmail")
+		ExecutionServiceAccountEmail, err := conf.Try("ExecutionServiceAccountEmail") // [Optional] Pulumi Execution Service Account Email
 		if err != nil {
 			ExecutionServiceAccountEmail = ""
 		} else {
