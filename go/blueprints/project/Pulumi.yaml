@@ -23,17 +23,22 @@ template:
   config: 
     GCPName:
       type: string
-      description: "Project name and id suffix."
+      description: "Project name and id suffix"
     GCPDescriptiveName: 
       type: string
-      description: "Optional Descriptive Name of the Google Cloud project."
+      description: "Optional Descriptive Name of the Google Cloud project"
       default: ""
     GCPBillingAccount: 
       type: string
-      description: "The Billing account ID to be associated with the New Google Cloud Project."
+      description: "The Billing account ID to be associated with the New Google Cloud Project"
     GCPParent: 
       type: string
       description: "The parent folder or organization in which to create the new Google Cloud Project (Format. organization/xxxxxxxxx || folder/xxxxxxxxx)"
     GCPPrefix: 
       type: string
-      description: "Optional prefix used to generate project id and name."
+      description: "Optional - Prefix used to generate project id and name"
+      default: ""
+    ExecutionServiceAccountEmail:
+      type: string
+      description: "Optional - Google Service Account used for Blueprint Execution"
+      default: ""
