@@ -242,14 +242,14 @@ func New(ctx *pulumi.Context, name string, args *Args, opts pulumi.ResourceOptio
 		}
 
 		// instanciate - Resource Collection - Google Cloud Project Services
-		var gcpProjectServices []*projects.Service
+		var gcpProjectServices []pulumi.Resource
 
 		// resource - [Classic] - Google Cloud Project Service
 		for idxService, Service := range args.Services {
 			gcpProjectService, err := projects.NewService(ctx, fmt.Sprintf("%s-gcp-project-service-%s-%d", urnPrefix, Service, idxService), &projects.ServiceArgs{
 				DisableDependentServices: pulumi.Bool(args.ServiceConfig.DisableDependentServices),
 				DisableOnDestroy:         pulumi.Bool(args.ServiceConfig.DisableOnDestroy),
-				Project:                  gcpProject.Id,
+				Project:                  gcpProject.ProjectId,
 				Service:                  pulumi.String(Service),
 			})
 			if err != nil {
@@ -273,7 +273,7 @@ func New(ctx *pulumi.Context, name string, args *Args, opts pulumi.ResourceOptio
 			gcpProjectMetadataItemOSLogin, err := compute.NewProjectMetadataItem(ctx, fmt.Sprintf("%s-gcp-project-metadata-oslogin", urnPrefix), &compute.ProjectMetadataItemArgs{
 				Key:   pulumi.String("enable-oslogin"),
 				Value: pulumi.String("TRUE"),
-			}, pulumi.DependsOn([]pulumi.Resource{gcpProjectServices}))
+			}, pulumi.DependsOn(gcpProjectServices))
 			if err != nil {
 				// Error Creating Resource - Google Cloud Project Metadata Item - OS Login
 				return state, err
@@ -311,7 +311,7 @@ func New(ctx *pulumi.Context, name string, args *Args, opts pulumi.ResourceOptio
 		for idxMetricScope, MetricScope := range args.MetricScopes {
 			// resource - [Classic] - Google Cloud Monitored Project
 			gcpProjectMonitored, err := monitoring.NewMonitoredProject(ctx, fmt.Sprintf("%s-gcp-project-monitored-project-metric-scope-%d", urnPrefix, idxMetricScope), &monitoring.MonitoredProjectArgs{
-				Name:         gcpProject.Id,
+				Name:         gcpProject.ProjectId,
 				MetricsScope: pulumi.String(MetricScope),
 			})
 			if err != nil {
