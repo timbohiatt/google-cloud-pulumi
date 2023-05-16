@@ -18,11 +18,13 @@ import (
 	"fmt"
 	"strings"
 
+	accesscontextmanager "github.com/pulumi/pulumi-gcp/sdk/v6/go/gcp/accesscontextmanager"
 	compute "github.com/pulumi/pulumi-gcp/sdk/v6/go/gcp/compute"
 	monitoring "github.com/pulumi/pulumi-gcp/sdk/v6/go/gcp/monitoring"
 	organizations "github.com/pulumi/pulumi-gcp/sdk/v6/go/gcp/organizations"
 	projects "github.com/pulumi/pulumi-gcp/sdk/v6/go/gcp/projects"
 	resourcemanager "github.com/pulumi/pulumi-gcp/sdk/v6/go/gcp/resourcemanager"
+	tags "github.com/pulumi/pulumi-gcp/sdk/v6/go/gcp/tags"
 	"github.com/pulumi/pulumi/sdk/v3/go/pulumi"
 	utils "github.com/timbohiatt/google-cloud-pulumi/go/utils"
 )
@@ -116,13 +118,13 @@ type Args struct {
 	ProjectCreate bool // Default False
 	ServiceConfig *ServiceConfigArgs
 	//ServiceEncryptionKeyIds  map[string]string
-	//ServicePerimeterBridges  []string
-	//ServicePerimeterStandard string
-	Services []string
+	ServicePerimeterBridges  []string
+	ServicePerimeterStandard string
+	Services                 []string
 	//SharedVpcHostConfig      SharedVpcHostConfigObj
 	//SharedVpcServiceConfig   SharedVpcServiceConfigObj
-	SkipDelete bool // Default False
-	//TagBindings              map[string]string
+	SkipDelete  bool // Default False
+	TagBindings []string
 }
 
 /*type ProjectObj struct {
@@ -263,7 +265,7 @@ func New(ctx *pulumi.Context, name string, args *Args, opts pulumi.ResourceOptio
 
 			// flag - bool - Export Resource?
 			if args.PulumiExport {
-				// export - resoruce - Google Cloud Project Service
+				// export - resource - Google Cloud Project Service
 				ctx.Export(fmt.Sprintf("%s-gcp-project-service-%s-%d", urnPrefix, Service, idxService), gcpProjectService) // TODO: Fix ARN String, Use Routine
 			}
 		}
@@ -280,7 +282,7 @@ func New(ctx *pulumi.Context, name string, args *Args, opts pulumi.ResourceOptio
 				return state, err
 			}
 			if args.PulumiExport {
-				// export - resoruce - Google Cloud Project Metadata Item - OS Login
+				// export - resource - Google Cloud Project Metadata Item - OS Login
 				ctx.Export(fmt.Sprintf("%s-gcp-project-metadata-oslogin", urnPrefix), gcpProjectMetadataItemOSLogin) // TODO: Fix ARN String, Use Routine
 			}
 		}
@@ -303,7 +305,7 @@ func New(ctx *pulumi.Context, name string, args *Args, opts pulumi.ResourceOptio
 				return state, err
 			}
 			if args.PulumiExport {
-				// export - resoruce - Google Cloud Resource Lien
+				// export - resource - Google Cloud Resource Lien
 				ctx.Export(fmt.Sprintf("%s-gcp-project-lien", urnPrefix), gcpProjectLien) // TODO: Fix ARN String, Use Routine
 			}
 		}
@@ -320,15 +322,63 @@ func New(ctx *pulumi.Context, name string, args *Args, opts pulumi.ResourceOptio
 				return state, err
 			}
 			if args.PulumiExport {
-				// export - resoruce - Google Cloud Monitored Project - Metric Scopes
+				// export - resource - Google Cloud Monitored Project - Metric Scopes
 				ctx.Export(fmt.Sprintf("%s-gcp-project-monitored-project-metric-scope-%d", urnPrefix, idxMetricScope), gcpProjectMonitored) // TODO: Fix ARN String, Use Routine
 			}
+
 		}
+
+		// resource - [Classic] - Google Cloud Tag Bindings
+		for idxTagBinding, TagBinding := range args.TagBindings {
+			gcpProjectTagBinding, err := tags.NewTagBinding(ctx, fmt.Sprintf("%s-gcp-project-tag-binding-%d", urnPrefix, idxTagBinding), &tags.TagBindingArgs{
+				Parent: gcpProject.Number.ApplyT(func(number string) (string, error) {
+					return fmt.Sprintf("//cloudresourcemanager.googleapis.com/projects/%v", number), nil
+				}).(pulumi.StringOutput),
+				TagValue: pulumi.String(fmt.Sprintf("tagValues/%s", TagBinding)),
+			})
+			if args.PulumiExport {
+				// export - resource - Google Cloud Tag Binding
+				ctx.Export(fmt.Sprintf("%s-gcp-project-tag-binding-%d", urnPrefix, idxTagBinding), gcpProjectTagBinding) // TODO: Fix ARN String, Use Routine
+			}
+		}
+
+		// resource - [Classic] - Google Cloud Service Perimeter - Standard
+		gcpServicePerimeterStandard, err := accesscontextmanager.NewServicePerimeterResource(ctx, fmt.Sprintf("%s-gcp-service-perimeter-standard", urnPrefix), &accesscontextmanager.ServicePerimeterResourceArgs{
+			PerimeterName: args.ServicePerimeterStandard,
+			Resource: gcpProject.Number.ApplyT(func(number string) (string, error) {
+				return fmt.Sprintf("projects/%v", number), nil
+			}).(pulumi.StringOutput),
+		})
+		if err != nil {
+			return err
+		}
+		if args.PulumiExport {
+			// export - resource - Google Cloud Service Perimeter - Standard
+			ctx.Export(fmt.Sprintf("%s-gcp-service-perimeter-standard", urnPrefix), gcpServicePerimeterStandard) // TODO: Fix ARN String, Use Routine
+		}
+
+		// resource - [Classic] - Google Cloud Service Perimeter - Bridge
+		for idxServicePerimeterBridge, ServicePerimeterBridge := range args.ServicePerimeterBridges {
+			gcpServicePerimeterBridge, err := accesscontextmanager.NewServicePerimeterResource(ctx, fmt.Sprintf("%s-gcp-service-perimeter-bridge-%d", urnPrefix, idxServicePerimeterBridge), &accesscontextmanager.ServicePerimeterResourceArgs{
+				PerimeterName: ServicePerimeterBridge,
+				Resource: gcpProject.Number.ApplyT(func(number string) (string, error) {
+					return fmt.Sprintf("projects/%v", number), nil
+				}).(pulumi.StringOutput),
+			})
+			if err != nil {
+				return err
+			}
+			if args.PulumiExport {
+				// export - resource - Google Google Cloud Service Perimeter - Bridge
+				ctx.Export(fmt.Sprintf("%s-gcp-service-perimeter-bridge-%d", urnPrefix, idxServicePerimeterBridge), gcpServicePerimeterBridge) // TODO: Fix ARN String, Use Routine
+			}
+		}
+
 	}
 
 	// flag - bool - Export Resource?
 	if args.PulumiExport {
-		// export - resoruce - Google Cloud Project
+		// export - resource - Google Cloud Project
 		ctx.Export(fmt.Sprintf("%s-gcp-project", urnPrefix), gcpProject) // TODO: Fix ARN String, Use Routine
 	}
 
