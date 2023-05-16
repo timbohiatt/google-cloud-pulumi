@@ -113,7 +113,7 @@ type Args struct {
 	Parent        string
 	Prefix        string
 	ProjectCreate bool // Default False
-	ServiceConfig ServiceConfigArgs
+	ServiceConfig *ServiceConfigArgs
 	//ServiceEncryptionKeyIds  map[string]string
 	//ServicePerimeterBridges  []string
 	//ServicePerimeterStandard string
