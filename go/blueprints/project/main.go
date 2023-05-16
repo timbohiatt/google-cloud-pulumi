@@ -62,7 +62,7 @@ func main() {
 		}
 
 		// Run's Module: Project
-		_, err = project.New(ctx, fmt.Sprintf("%s", urnPrefix), &project.ProjectArgs{
+		_, err = project.New(ctx, fmt.Sprintf("%s", urnPrefix), &project.Args{
 			PulumiExport:      true,
 			AutoCreateNetwork: false,
 			BillingAccount:    BillingAccount,
