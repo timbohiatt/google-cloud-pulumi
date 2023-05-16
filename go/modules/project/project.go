@@ -216,7 +216,14 @@ func New(ctx *pulumi.Context, name string, args *Args, opts pulumi.ResourceOptio
 	if args.ProjectCreate {
 
 		// instanciate - Resource Arguments - Google Cloud Project
-		var projectArgs *organizations.ProjectArgs
+		projectArgs := &organizations.ProjectArgs{
+			ProjectId:         pulumi.String(locals.ProjectId),
+			AutoCreateNetwork: pulumi.Bool(args.AutoCreateNetwork), // TODO: Add Variable Support, Add Validation Routine
+			BillingAccount:    pulumi.String(args.BillingAccount),  // TODO: Add Variable Support, Add Validation Routine
+			Name:              pulumi.String(locals.DescriptiveName),
+			SkipDelete:        pulumi.Bool(args.SkipDelete), // TODO: Add Variable Support, Add Validation Routine
+			//Labels: MAP?pulumi.String()			// TODO: Add Variable Support, Add Validation Routine
+		}
 
 		// If Parent is a Google Cloud Organization set the parent to this Organization
 		if locals.ParentType == organisations {
@@ -227,17 +234,8 @@ func New(ctx *pulumi.Context, name string, args *Args, opts pulumi.ResourceOptio
 			projectArgs.FolderId = pulumi.String(locals.ParentId)
 		}
 
-		projectArgs{
-			ProjectId:         pulumi.String(locals.ProjectId),
-			AutoCreateNetwork: pulumi.Bool(args.AutoCreateNetwork), // TODO: Add Variable Support, Add Validation Routine
-			BillingAccount:    pulumi.String(args.BillingAccount),  // TODO: Add Variable Support, Add Validation Routine
-			Name:              pulumi.String(locals.DescriptiveName),
-			SkipDelete:        pulumi.Bool(args.SkipDelete), // TODO: Add Variable Support, Add Validation Routine
-			//Labels: MAP?pulumi.String()			// TODO: Add Variable Support, Add Validation Routine
-		}
-
 		// resource - [Classic] - Google Cloud Project
-		gcpProject, err := organizations.NewProject(ctx, fmt.Sprintf("%s-gcp-project", urnPrefix), &projectArgs)
+		gcpProject, err := organizations.NewProject(ctx, fmt.Sprintf("%s-gcp-project", urnPrefix), projectArgs)
 		if err != nil {
 			// Error Creating Resource -  Google Cloud Project
 			return state, err
