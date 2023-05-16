@@ -48,15 +48,15 @@ func main() {
 		Parent := conf.Require("GCPParent")                 // Google Cloud Parent Organisation or Folder
 
 		// Optional
-		Prefix, err := conf.TryString("GCPPrefix")
+		Prefix, err := conf.Try("GCPPrefix")
 		if err != nil {
 			Prefix = ""
 		}
-		DescriptiveName, err := conf.TryString("GCPDescriptiveName")
+		DescriptiveName, err := conf.Try("GCPDescriptiveName")
 		if err != nil {
 			DescriptiveName = ""
 		}
-		LienReason, err := conf.TryString("GCPLienReason")
+		LienReason, err := conf.Try("GCPLienReason")
 		if err != nil {
 			LienReason = ""
 		}
