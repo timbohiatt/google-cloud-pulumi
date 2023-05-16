@@ -71,7 +71,7 @@ func main() {
 				// Error Configuring Pulumi Provider to use Google Service Account
 				return err
 			} else {
-				fmt.Println("Running Google Cloud Pulumi - Blueprint: Project")
+				fmt.Println("Running Google Cloud Pulumi - Blueprint: With Google Service Account")
 			}
 		}
 
