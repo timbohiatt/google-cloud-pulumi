@@ -24,6 +24,7 @@ import (
 	projects "github.com/pulumi/pulumi-gcp/sdk/v6/go/gcp/projects"
 	resourcemanager "github.com/pulumi/pulumi-gcp/sdk/v6/go/gcp/resourcemanager"
 	"github.com/pulumi/pulumi/sdk/v3/go/pulumi"
+	utils "github.com/timbohiatt/google-cloud-pulumi/go/utils"
 )
 
 type ResourceState struct {
@@ -182,10 +183,10 @@ func New(ctx *pulumi.Context, name string, args *Args, opts pulumi.ResourceOptio
 	const folders string = "folders"
 	var parentOptions = []string{"organizations", "folders"}
 	// validate - parent variable format, must contain "/"
-	if Contains(strings.Split(args.Parent, ""), "/") {
+	if utils.Contains(strings.Split(args.Parent, ""), "/") {
 		parentValues := strings.Split(args.Parent, "/")
 		// validate - parent variable format, must contain "orgnanisations or folders"
-		if Contains(parentOptions, parentValues[0]) {
+		if utils.Contains(parentOptions, parentValues[0]) {
 			// Parent is Google Cloud Organisation or Folder
 			locals.ParentType = parentValues[0] // Set Patent Type as "organizations" or "folders"
 			locals.ParentId = parentValues[1]   // Set ID for Parent Organization or Folder
@@ -332,19 +333,4 @@ func New(ctx *pulumi.Context, name string, args *Args, opts pulumi.ResourceOptio
 	}
 
 	return state, err
-}
-
-// TODO - Centralise these Functions
-// Util Functions
-
-// Contains returns a boolean value;
-// Returns True when the the input array contains an element of equal value to the input string.
-// Returns False when the the input array does not contain an element of equal value to the input string.
-func Contains(s []string, str string) bool {
-	for _, v := range s {
-		if v == str {
-			return true
-		}
-	}
-	return false
 }

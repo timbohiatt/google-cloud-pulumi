@@ -21,6 +21,7 @@ import (
 	"github.com/pulumi/pulumi/sdk/v3/go/pulumi"
 	"github.com/pulumi/pulumi/sdk/v3/go/pulumi/config"
 	project "github.com/timbohiatt/google-cloud-pulumi/go/modules/project"
+	utils "github.com/timbohiatt/google-cloud-pulumi/go/utils"
 )
 
 // Blueprint Configuratuion
@@ -36,7 +37,15 @@ func main() {
 	pulumi.Run(func(ctx *pulumi.Context) (err error) {
 		fmt.Println("Running Google Cloud Pulumi - Blueprint: Project")
 
+		execServiceAccount := "thiatt-provisioning@joonix-security-accounts.iam.gserviceaccount.com"
+
 		var provider *gcp.Provider
+
+		/*
+
+			GARYS STUFF
+
+		*/
 
 		conf := config.New(ctx, "")
 
@@ -52,6 +61,7 @@ func main() {
 		if err != nil {
 			Prefix = ""
 		}
+
 		DescriptiveName, err := conf.Try("GCPDescriptiveName")
 		if err != nil {
 			DescriptiveName = ""
@@ -59,6 +69,20 @@ func main() {
 		LienReason, err := conf.Try("GCPLienReason")
 		if err != nil {
 			LienReason = ""
+		}
+
+		ExecutionServiceAccountEmail, err := conf.Try("ExecutionServiceAccountEmail")
+		if err != nil {
+			ExecutionServiceAccountEmail = ""
+		} else {
+			// Execution Service Account Email has been provided.
+			provider, err = utils.GetProviderWithServiceAccount(ctx, fmt.Sprintf("%s-google-cloud-pulumi-provider", urnPrefix), ExecutionServiceAccountEmail, []string{"cloud-platform"})
+			if err != nil {
+				// Error Configuring Pulumi Provider to use Google Service Account
+				return err
+			} else {
+				fmt.Println("Running Google Cloud Pulumi - Blueprint: Project")
+			}
 		}
 
 		// Run's Module: Project
