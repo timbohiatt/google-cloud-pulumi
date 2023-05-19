@@ -159,7 +159,6 @@ func New(ctx *pulumi.Context, name string, args *Args, opts pulumi.ResourceOptio
 	}
 
 	// Local Variable Configuration
-
 	// instanciate - local variables - module
 	locals := &Locals{}
 
