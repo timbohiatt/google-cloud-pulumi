@@ -130,7 +130,7 @@ func New(ctx *pulumi.Context, name string, args *Args, opts pulumi.ResourceOptio
 	// var - Google Cloud Storage Bucket
 	var gcpStorageBucket *storage.Bucket
 
-	// instanciate - Resource Arguments - Google Cloud Project
+	// instanciate - Resource Arguments - Google Cloud Strorage Bucket
 	bucketArgs := &storage.BucketArgs{
 		Name:                     pulumi.String(strings.ToLower(fmt.Sprintf("%s%s", locals.Prefix, args.Name))),
 		Project:                  pulumi.String(args.ProjectID),
@@ -187,6 +187,10 @@ func New(ctx *pulumi.Context, name string, args *Args, opts pulumi.ResourceOptio
 	if err != nil {
 		// Error Creating Resource -  Google Cloud Storage Bucket
 		return state, err
+	}
+	if args.PulumiExport {
+		// export - resoruce -  Google Cloud Storage Bucket
+		ctx.Export(fmt.Sprintf("%s-gcp-storage-bucket", urnPrefix), gcpStorageBucket) // TODO: Fix ARN String, Use Routine
 	}
 
 	// TODO Resource: google_storage_bucket_iam_binding
